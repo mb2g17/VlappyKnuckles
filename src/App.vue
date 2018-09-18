@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <component v-bind:is="roomName"></component>
+    <component id="roomContainer" v-bind:is="roomName"></component>
   </div>
 </template>
 
@@ -32,26 +32,31 @@ html, body {
 
 // App
 #app {
-  border: 5px;
-  border-color:red;
-  border-style: ridge;
-
   position:fixed;
-  left:calc(50vw - 400px);
-  top:calc(50vh - 300px);
-  width:800px;
-  height:600px;
+  left:0;
+  top:0;
+  width:100vw;
+  height:100vh;
 
   background-image: url('assets/bg.png');
-  background-size: 800px 600px;
+  background-color:#2020e0;
+  background-size: cover;
   background-repeat: repeat-x;
-  animation: background-move 10s infinite;
+  animation: background-move 15s infinite;
   animation-timing-function: linear;
+
+  font-family: 'Roboto';
 }
 
 // Background movement animation
 @keyframes background-move {
   from {background-position:0 0;}
-  to {background-position:800px 0;}
+  to {background-position:100vw 0;}
+}
+
+// Contains the room
+#roomContainer {
+  width:100%;
+  height:100%;
 }
 </style>
