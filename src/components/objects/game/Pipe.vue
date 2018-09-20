@@ -1,5 +1,5 @@
 <template>
-	<div class="pipe" :style="{ right: pos + 'px', transform: 'translate(0,' + spacePos + 'px)' }">
+	<div class="pipe" :style="{ right: pos + 'px', transform: 'translate(0,' + spacePosData + 'px)' }">
 
 		<div class="top" :style="{ top: 'calc(-50vh - ' + (spaceHeight / 2) + 'px)' }">
 			<img class="body" src="../../../assets/pipeBody.png" /><img class="head" src="../../../assets/pipeHead.png" />
@@ -37,8 +37,13 @@
 
 		data: function() {
 			return {
-				pos: -38
+				pos: -38,
+				spacePosData: 0 // True version of spacePos in data, so Vue doesn't whine at me
 			}
+		},
+
+		created: function() {
+			this.spacePosData = this.spacePos;
 		},
 
 		methods: {
@@ -59,7 +64,7 @@
 
 			// Mutator for spacePos data
 			setSpacePos: function(newSpacePos) {
-				this.spacePos = newSpacePos;
+				this.spacePosData = newSpacePos;
 			}
 		}
 	}
