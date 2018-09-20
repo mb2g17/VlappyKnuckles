@@ -16,7 +16,7 @@
 						  		:headers="headers"
 						  		:items="$store.state.highscoreItems"
 						  		:pagination.sync="pagination"
-						  		must-sort="true"
+						  		must-sort
 						  		hide-actions
 						  	>
 						  		<template slot="items" slot-scope="props">

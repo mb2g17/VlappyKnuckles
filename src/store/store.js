@@ -12,7 +12,7 @@ export default new Vuex.Store({
 				score: 20
 			},
 			{
-				name: "Sophie",
+				name: "Jennifer",
 				score: 15
 			},
 			{

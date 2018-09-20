@@ -1,7 +1,5 @@
 <template>
-	<div>
-		<img id="knucklesSprite" :src="require('../../../assets/' + this.sprite)" :style="{ bottom: vposStr }" />
-	</div>
+	<img :src="require('../../../assets/' + this.sprite)" :style="{ bottom: vposStr }" />
 </template>
 
 <script>
@@ -15,7 +13,7 @@
 	    	vspeed: 0, // vertical speed
 	    	acceleration: 0.3, // vertical acceleration
 
-	    	deathArea: 15, // the area at which Knuckles will die
+	    	deathArea: 15, // the area at which Knuckles will die in pixels
 	    	dead: false, // Are we dead?
     	}
     },
@@ -73,8 +71,8 @@
   }
 </script>
 
-<style lang="scss">
-#knucklesSprite {
+<style scoped lang="scss">
+img {
 	position: fixed;
 	left: 50px;
 }

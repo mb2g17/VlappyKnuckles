@@ -1,14 +1,27 @@
 <template>
   <div>
+
+    <ScrollingObject image-url="grass.png" :speed=10 height="39px" size="contain"></ScrollingObject>
     
     <Knuckles ref="knuckles" @die="die"></Knuckles>
+
+    <Pipe v-for="(spacePos, index) in pipes"
+    	:ref="'pipe' + index"
+    	:key="index + 1"
+    	:pkey="index"
+    	:space-pos="spacePos"
+    	:v-show="spacePos !== -1"
+    	@gone="killPipe($event)">
+    </Pipe>
+
+    <Timer ref="pipeTimer" :duration=90 @tick="newPipe"></Timer>
 
     <!-- Controls -->
     <div>
 			<v-btn color="blue" @click="flap">Flap</v-btn>
 			<v-btn color="yellow" @click="pause" :disabled="this.updateHandle === -1">Pause</v-btn>
 			<v-btn color="green" @click="update" :disabled="this.updateHandle !== -1">Start</v-btn>
-			<v-btn color="green" @click="restart" :disabled="!this.restartEnabled">Restart</v-btn>
+			<v-btn color="green" @click="restart">Restart</v-btn>
 			<v-btn color="red" @click="quit">Quit</v-btn>
 		</div>
 
@@ -22,18 +35,29 @@
 
 <script>
   import Knuckles from '../objects/game/Knuckles';
+  import Ground from '../objects/game/Ground';
+  import Pipe from '../objects/game/Pipe';
+
+  import ScrollingObject from '../objects/misc/ScrollingObject';
+  import Timer from '../objects/misc/Timer';
+
+  import { getRandomInt } from '../../libs/Random';
 
   export default {
     name: 'Game',
 
     components: {
-    	Knuckles
+    	Knuckles, Ground, Pipe,
+    	ScrollingObject, Timer
     },
 
     data: function() {
     	return {
 	    	updateHandle: -1, // The handle of the update interval
 	    	restartEnabled: false, // Becomes true when we can restart the game
+	    	pipes: [ // Array of pipe space positions; there are 10 in the buffer, -1 means not used
+	    		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+	    	]
     	}
     },
 
@@ -46,10 +70,43 @@
     			// Run update interval
 		    	this.updateHandle = setInterval(() =>
 		    	{
-		    		// Updates all objects
+		    		// Updates Knuckles
 		    		this.$refs.knuckles.update();
+
+		    		// Updates pipe creation timer
+		    		this.$refs.pipeTimer.update();
+
+		    		// For each pipe, update it
+		    		for (let i = 0; i < this.pipes.length; i++)
+		    		{
+		    			// If this pipe exists, then update it
+		    			if (this.pipes[i] !== -1)
+		    				this.$refs['pipe' + i][0].update();
+		    		}
+		    		
 		    	}, 17);
     		}
+    	},
+
+    	// Creates a new pipe
+    	newPipe: function() {
+    		// Look for an element without a pipe
+    		for (let i = 0; i < this.pipes.length; i++)
+    		{
+    			// If this pipe is free, use it
+    			if (this.pipes[i] === -1) {
+  					this.pipes[i] = getRandomInt(-window.innerHeight / 3, window.innerHeight / 3);
+    				console.log("Created new pipe of height " + this.pipes[i]);
+  					break;
+    			}
+    		}
+    	},
+
+    	// Kills a pipe, given its index
+    	killPipe: function(index) {
+    		this.pipes[index] = -1;
+    		this.$refs['pipe' + index][0].putBack();
+    		console.log("Killed pipe " + index);
     	},
 
     	// Flaps Knuckles up in the air
@@ -64,9 +121,16 @@
 
     	// Restarts the game
     	restart: function() {
-    		this.$refs.knuckles.resetPos();
-    		this.$refs.knuckles.dead = false;
-    		this.pause();
+    		this.$refs.knuckles.resetPos(); // Resets knuckles position
+    		this.$refs.knuckles.dead = false; // Revives knuckles
+
+				// Removes all pipes
+    		for (let i = 0; i < this.pipes.length; i++) {
+    			this.pipes[i] = -1;
+    			this.$refs['pipe' + i][0].putBack();
+    		}
+
+    		this.pause(); // Pauses game
     	},
 
     	// Pauses the game by clearing the update interval

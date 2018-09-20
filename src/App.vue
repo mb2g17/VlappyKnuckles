@@ -1,6 +1,12 @@
 <template>
   <div id="app">
+
+    <!-- Background -->
+    <ScrollingObject image-url="bg.png" :speed=15 size="cover"></ScrollingObject>
+
+    <!-- Room container -->
     <component id="roomContainer" v-bind:is="roomName"></component>
+
   </div>
 </template>
 
@@ -10,10 +16,12 @@
   import Highscore from './components/rooms/Highscore';
   import MainMenu from './components/rooms/MainMenu';
 
+  import ScrollingObject from './components/objects/misc/ScrollingObject';
+
   export default {
     name: 'App',
     components: {
-      Game, Highscore, MainMenu
+      Game, Highscore, MainMenu, ScrollingObject
     },
     computed: {
       ...mapState([
@@ -38,20 +46,7 @@ html, body {
   width:100vw;
   height:100vh;
 
-  background-image: url('assets/bg.png');
-  background-color:#2020e0;
-  background-size: cover;
-  background-repeat: repeat-x;
-  animation: background-move 15s infinite;
-  animation-timing-function: linear;
-
   font-family: 'Roboto';
-}
-
-// Background movement animation
-@keyframes background-move {
-  from {background-position:0 0;}
-  to {background-position:100vw 0;}
 }
 
 // Contains the room
