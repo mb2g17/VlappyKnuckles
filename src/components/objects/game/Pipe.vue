@@ -1,11 +1,11 @@
 <template>
-	<div class="pipe" :style="{ right: pos + 'px' }">
+	<div class="pipe" :style="{ right: pos + 'px', transform: 'translate(0,' + spacePos + 'px)' }">
 
-		<div class="top" :style="{ top: 'calc(-50vh - ' + (spaceHeight / 2) + 'px - ' + spacePos + 'px)' }">
+		<div class="top" :style="{ top: 'calc(-50vh - ' + (spaceHeight / 2) + 'px)' }">
 			<img class="body" src="../../../assets/pipeBody.png" /><img class="head" src="../../../assets/pipeHead.png" />
 		</div>
 
-		<div class="bottom" :style="{ top: 'calc(-50vh + ' + (spaceHeight / 2) + 'px - ' + spacePos + 'px)' }">
+		<div class="bottom" :style="{ top: 'calc(-50vh + ' + (spaceHeight / 2) + 'px)' }">
 			<img class="body" src="../../../assets/pipeBody.png" /><img class="head" src="../../../assets/pipeHead.png" />
 		</div>
 			
@@ -55,6 +55,11 @@
 			// Puts the pipe back
 			putBack: function() {
 				this.pos = -38;
+			},
+
+			// Mutator for spacePos data
+			setSpacePos: function(newSpacePos) {
+				this.spacePos = newSpacePos;
 			}
 		}
 	}

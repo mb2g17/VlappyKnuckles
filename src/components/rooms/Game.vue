@@ -54,7 +54,6 @@
     data: function() {
     	return {
 	    	updateHandle: -1, // The handle of the update interval
-	    	restartEnabled: false, // Becomes true when we can restart the game
 	    	pipes: [ // Array of pipe space positions; there are 10 in the buffer, -1 means not used
 	    		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 	    	]
@@ -96,7 +95,7 @@
     			// If this pipe is free, use it
     			if (this.pipes[i] === -1) {
   					this.pipes[i] = getRandomInt(-window.innerHeight / 3, window.innerHeight / 3);
-    				console.log("Created new pipe of height " + this.pipes[i]);
+  					this.$refs["pipe" + i][0].setSpacePos(this.pipes[i]);
   					break;
     			}
     		}
@@ -106,7 +105,6 @@
     	killPipe: function(index) {
     		this.pipes[index] = -1;
     		this.$refs['pipe' + index][0].putBack();
-    		console.log("Killed pipe " + index);
     	},
 
     	// Flaps Knuckles up in the air
@@ -116,7 +114,6 @@
 
     	// Executed when Knuckles dies
     	die: function() {
-    		this.restartEnabled = true;
     	},
 
     	// Restarts the game
