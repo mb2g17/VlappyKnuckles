@@ -1,10 +1,12 @@
 <template>
 
-	<div :style="{
+	<div class="right" :style="{
 		backgroundImage: 'url(' + bgImg + ')',
 		backgroundSize: size,
 		animationDuration: speed + 's',
-		height: height }">
+		height: height,
+		animationName: right ? `background-move-left-${this.$options._scopeId}` : `background-move-right-${this.$options._scopeId}`
+	}">
 	</div>
 
 </template>
@@ -29,8 +31,14 @@
 		},
 
 		computed: {
+			// The background image
 			bgImg: function() {
 				return require('../../../assets/' + this.imageUrl);
+			},
+
+			// Whether we're going right or left
+			right: function() {
+				return this.$attrs['right'] === undefined;
 			}
 		}
 	}
@@ -47,7 +55,7 @@ div {
   background-color:#2020e0;
   background-repeat: repeat-x;
 
-  animation-name: background-move;
+  animation-name: background-move-right;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 
@@ -55,9 +63,15 @@ div {
 }
 
 // Background movement animation
-@keyframes background-move {
+@keyframes background-move-right {
   from {background-position:0 0;}
   to {background-position:100vw 0;}
+}
+
+// Background movement animation
+@keyframes background-move-left {
+  from {background-position:0 0;}
+  to {background-position:-100vw 0;}
 }
 
 </style>
