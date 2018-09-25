@@ -1,10 +1,19 @@
 <template>
   <div>
 
+  	<!-- Grass -->
     <ScrollingObject image-url="grass.png" :speed=10 height="39px" size="contain"></ScrollingObject>
+
+    <!-- Score -->
+    <v-chip id="score" color="green" text-color="white" justify-end>
+      <v-avatar class="green darken-4">{{ score }}</v-avatar>
+      Score
+    </v-chip>
     
+    <!-- Knuckles -->
     <Knuckles ref="knuckles" @die="die"></Knuckles>
 
+    <!-- Pipes -->
     <Pipe v-for="(spacePos, index) in pipes"
     	:ref="'pipe' + index"
     	:key="index + 1"
@@ -14,13 +23,14 @@
     	@gone="killPipe($event)">
     </Pipe>
 
+    <!-- Update timer -->
     <Timer ref="pipeTimer" :duration=90 @tick="newPipe"></Timer>
 
     <!-- Controls -->
     <div>
 			<v-btn color="blue" @click="flap">Flap</v-btn>
-			<v-btn color="yellow" @click="pause" :disabled="this.updateHandle === -1">Pause</v-btn>
-			<v-btn color="green" @click="update" :disabled="this.updateHandle !== -1">Start</v-btn>
+			<v-btn color="yellow" @click="pause" :disabled="this.updateHandle === -1 || this.gameOver">Pause</v-btn>
+			<v-btn color="green" @click="update" :disabled="this.updateHandle !== -1 || this.gameOver">Start</v-btn>
 			<v-btn color="green" @click="restart">Restart</v-btn>
 			<v-btn color="red" @click="quit">Quit</v-btn>
 		</div>
@@ -56,7 +66,9 @@
 	    	updateHandle: -1, // The handle of the update interval
 	    	pipes: [ // Array of pipe space positions; there are 10 in the buffer, -1 means not used
 	    		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-	    	]
+	    	],
+	    	gameOver: false, // True if the game is over, false if not
+	    	score: 0 // The score
     	}
     },
 
@@ -104,22 +116,13 @@
 		    					// Calculate space pos top and bottom
 		    					let spacePosTop = window.innerHeight / 2 + spaceHeight / 2 + spacePos;
 		    					let spacePosBottom = window.innerHeight / 2 - spaceHeight / 2 + spacePos;
-
-		    					console.log(`knucklesPos: ${knucklesPos}`);
-		    					console.log(`spaceHeight: ${spaceHeight}`);
-		    					console.log(`spacePos: ${spacePos}`);
-
-		    					console.log(`spacePosTop: ${spacePosTop}`);
-		    					console.log(`spacePosBottom: ${spacePosBottom}`);
 		    					
 		    					// If Knuckles is going through the space
 		    					if (knucklesPos + 24 <= spacePosTop && knucklesPos >= spacePosBottom)
-		    					{
-		    						console.log("Passed!");
-		    					}
-		    					else
-		    					{
-		    						console.log("BONK");
+		    						this.score++;
+		    					else {
+		    						this.$refs.knuckles.dead = true;
+		    						this.die();
 		    					}
 		    				}
 		    			}
@@ -156,6 +159,8 @@
 
     	// Executed when Knuckles dies
     	die: function() {
+    		this.pause();
+    		this.gameOver = true;
     	},
 
     	// Restarts the game
@@ -168,6 +173,10 @@
     			this.pipes[i] = -1;
     			this.$refs['pipe' + i][0].putBack();
     		}
+
+    		// Reset data
+    		this.gameOver = false;
+    		this.score = 0;
 
     		this.pause(); // Pauses game
     	},
@@ -200,5 +209,10 @@
   }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+#score {
+	position:fixed;
+	right: 10px;
+	top: 10px;
+}
 </style>
