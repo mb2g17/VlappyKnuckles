@@ -3,12 +3,6 @@
 
   	<!-- Grass -->
     <ScrollingObject image-url="grass.png" :speed=10 height="39px" size="contain"></ScrollingObject>
-
-    <!-- Score -->
-    <v-chip id="score" color="green" text-color="white" justify-end>
-      <v-avatar class="green darken-4">{{ score }}</v-avatar>
-      Score
-    </v-chip>
     
     <!-- Knuckles -->
     <Knuckles ref="knuckles" @die="die"></Knuckles>
@@ -26,59 +20,14 @@
     <!-- Update timer -->
     <Timer ref="pipeTimer" :duration=90 @tick="newPipe"></Timer>
 
+    <!-- Score -->
+    <v-chip id="score" color="green" text-color="white" justify-end>
+      <v-avatar class="green darken-4">{{ score }}</v-avatar>
+      Score
+    </v-chip>
+
     <!-- Highscore dialog -->
-    <v-dialog
-      v-model="highscoreDialog"
-      width="500"
-      persistent
-    >
-      <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
-          primary-title
-        >
-          A new high-score!
-        </v-card-title>
-
-        <v-card-text>
-          <p>Congratulations! You've earned a new high-score of {{ score }}!</p>
-          <p>You are number {{ this.$store.getters.isHighScore(score) + 1 }} in the high-score table!</p>
-          <p>Please type in your name and click 'Submit'!</p>
-
-          <v-form ref="form" v-model="highscoreNameValid" lazy-validation>
-	          <v-text-field
-				      v-model="highscoreName"
-				      :rules="[v => (v && v.length <= 10) || 'Name must be less than 10 characters']"
-				      :counter="10"
-				      label="Name"
-				      maxlength="10"
-				      required
-				    ></v-text-field>
-          </v-form>
-
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="red"
-            flat
-            @click="highscoreDialog = false"
-          >
-          	Do not save my score
-          </v-btn>
-          <v-btn
-            color="blue"
-            flat
-            @click="saveHighscore()"
-          >
-          	Submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <HighscoreDialog :show="highscoreDialog" :score="score" @close="highscoreDialog = false"></HighscoreDialog>
 
     <!-- Controls -->
     <div>
@@ -106,6 +55,7 @@
   import ScrollingObject from '../objects/misc/ScrollingObject';
   import Timer from '../objects/misc/Timer';
 
+  import HighscoreDialog from '../objects/ui/HighscoreDialog';
   import { getRandomInt } from '../../libs/Random';
 
   export default {
@@ -113,7 +63,8 @@
 
     components: {
     	Knuckles, Ground, Pipe,
-    	ScrollingObject, Timer
+    	ScrollingObject, Timer,
+    	HighscoreDialog
     },
 
     data: function() {
@@ -126,8 +77,6 @@
 	    	score: 0, // The score
 
 	    	highscoreDialog: false, // Toggles highscore dialog
-	    	highscoreNameValid: true, // Stores validity of name in high-score dialog
-	    	highscoreName: "" // The name typed in the high-score dialog
     	}
     },
 
@@ -254,12 +203,6 @@
     	quit: function() {
     		this.pause();
         this.$store.commit('setRoom', 'MainMenu');
-    	},
-
-    	// Saves a new high-score
-    	saveHighscore: function() {
-    		this.$store.dispatch('setHighscore', {name: this.highscoreName, score: this.score});
-    		this.highscoreDialog = false;
     	},
 
     	// ----------------------------------------
