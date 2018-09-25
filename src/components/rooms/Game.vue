@@ -38,11 +38,11 @@
 			<v-btn color="red" @click="quit">Quit</v-btn>
 		</div>
 
-		<!-- Debug -->
+		<!-- Debug
 		<div>
 			<v-btn color="purple" @click="debugResetPos">DEBUG: Reset Knuckles' position</v-btn>
 			<v-btn color="purple" @click="debugTEST">DEBUG: TEST</v-btn>
-		</div>
+		</div> -->
 
   </div>
 </template>
