@@ -1,6 +1,11 @@
 <template>
   <div>
 
+  	<!-- Sounds -->
+  	<Audio ref="sound-start" :sound="require('../../assets/k-start.wav')"></Audio>
+  	<Audio ref="sound-lose" :sound="require('../../assets/k-lose.wav')"></Audio>
+  	<Audio ref="sound-bgm" :sound="require('../../assets/angelisland.ogg')"></Audio>
+
   	<!-- Grass -->
     <ScrollingObject image-url="grass.png" :speed="grassSpeed" height="39px" size="contain"></ScrollingObject>
     
@@ -54,6 +59,7 @@
 
   import ScrollingObject from '../objects/misc/ScrollingObject';
   import Timer from '../objects/misc/Timer';
+  import Audio from '../objects/misc/Audio';
 
   import HighscoreDialog from '../objects/ui/HighscoreDialog';
   import { getRandomInt } from '../../libs/Random';
@@ -63,7 +69,7 @@
 
     components: {
     	Knuckles, Ground, Pipe,
-    	ScrollingObject, Timer,
+    	ScrollingObject, Timer, Audio,
     	HighscoreDialog
     },
 
@@ -81,12 +87,19 @@
     	}
     },
 
+    mounted: function() {
+    	this.$refs["sound-bgm"].play();
+    },
+
     methods: {
     	// Kickstarts the update interval
     	update: function() {
 
     		// Starts grass
     		this.grassSpeed = 10;
+
+    		// Plays start sound
+    		this.$refs["sound-start"].play();
 
     		// If update interval isn't already set
     		if (this.updateHandle === -1)
@@ -175,6 +188,12 @@
     		this.pause();
     		this.gameOver = true;
 
+    		// Plays die sound
+    		this.$refs["sound-lose"].play();
+
+    		// Stops music
+    		this.$refs["sound-bgm"].stop();
+
     		// Stops grass
     		this.grassSpeed = 0;
 
@@ -185,6 +204,9 @@
 
     	// Restarts the game
     	restart: function() {
+    		// Play music
+    		this.$refs["sound-bgm"].play();
+
     		this.$refs.knuckles.resetPos(); // Resets knuckles position
     		this.$refs.knuckles.dead = false; // Revives knuckles
 
