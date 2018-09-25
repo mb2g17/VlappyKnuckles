@@ -32,14 +32,6 @@
       width="500"
       persistent
     >
-      <v-btn
-        slot="activator"
-        color="red lighten-2"
-        dark
-      >
-        Click Me
-      </v-btn>
-
       <v-card>
         <v-card-title
           class="headline grey lighten-2"

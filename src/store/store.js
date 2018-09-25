@@ -54,31 +54,29 @@ export default new Vuex.Store({
   		const {name: name, score: score, position: position} = payload;
 
   		// Add to high-score
-  		state.highscoreItems.splice(position, 1, {
+  		state.highscoreItems.splice(position, 0, {
   			name: name,
   			score: score
   		});
+
+  		// Chop off the end
+  		state.highscoreItems.splice(state.highscoreItems.length - 1, 1);
   	},
   },
 
   actions: {
   	// Adds a new score to high-score, payload needs name and score
   	setHighscore(context, payload) {
-  		console.log("In the action");
   		// Gets high-score position
   		let position = context.getters.isHighScore(payload.score);
 
   		// If it's -1, don't bother
   		if (position !== -1) {
   			// Run mutation
-  			console.log("Running mutation");
   			context.commit('setHighscore', {
   				position: position,
   				...payload
   			});
-  		}
-  		else {
-  			console.log("No mutation");
   		}
   	}
   },
