@@ -87,6 +87,8 @@
           // If we've fallen enough
           if (i >= t) {
             vm.falling = false;
+            vm.vpos = 15;
+            vm.vposStr = "15px";
             clearInterval(intervalID);
           }
         }, 17, this);
