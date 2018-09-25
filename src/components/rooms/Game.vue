@@ -75,7 +75,7 @@
 	    	],
 	    	gameOver: false, // True if the game is over, false if not
 	    	score: 0, // The score
-	    	grassSpeed: 10, // The speed of the grass
+	    	grassSpeed: 0, // The speed of the grass
 
 	    	highscoreDialog: false, // Toggles highscore dialog
     	}
