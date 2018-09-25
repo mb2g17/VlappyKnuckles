@@ -77,6 +77,7 @@
 			putBack: function() {
 				this.pos = -38;
 				this.passed = false;
+				this.ringVisible = true;
 			},
 
 			// Mutator for spacePos data
