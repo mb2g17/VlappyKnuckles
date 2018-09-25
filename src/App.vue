@@ -2,7 +2,7 @@
   <div id="app">
 
     <!-- Background -->
-    <ScrollingObject image-url="bg.png" :speed=15 size="cover"></ScrollingObject>
+    <ScrollingObject image-url="bg.png" :speed=20 size="cover"></ScrollingObject>
 
     <!-- Room container -->
     <component id="roomContainer" v-bind:is="roomName"></component>

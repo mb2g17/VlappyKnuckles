@@ -2,7 +2,7 @@
   <div>
 
   	<!-- Grass -->
-    <ScrollingObject image-url="grass.png" :speed=10 height="39px" size="contain"></ScrollingObject>
+    <ScrollingObject image-url="grass.png" :speed="grassSpeed" height="39px" size="contain"></ScrollingObject>
     
     <!-- Knuckles -->
     <Knuckles ref="knuckles" @die="die"></Knuckles>
@@ -75,6 +75,7 @@
 	    	],
 	    	gameOver: false, // True if the game is over, false if not
 	    	score: 0, // The score
+	    	grassSpeed: 10, // The speed of the grass
 
 	    	highscoreDialog: false, // Toggles highscore dialog
     	}
@@ -170,6 +171,9 @@
     		this.pause();
     		this.gameOver = true;
 
+    		// Stops grass
+    		this.grassSpeed = 0;
+
     		// If we got the high-score
     		if (this.$store.getters.isHighScore(this.score) !== -1)
     			this.highscoreDialog = true;
@@ -189,6 +193,9 @@
     		// Reset data
     		this.gameOver = false;
     		this.score = 0;
+
+    		// Starts grass
+    		this.grassSpeed = 10;
 
     		this.pause(); // Pauses game
     	},
