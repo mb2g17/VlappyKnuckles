@@ -31,15 +31,56 @@ export default new Vuex.Store({
   },
 
   getters: {
-  },
-
-  mutations: {
-  	setRoom(state, roomName) {
-  		state.roomName = roomName;
+  	// Returns the new position of the new score on the high-score board. -1 if no high-score.
+  	isHighScore: (state) => (newScore) => {
+  		for (let i = 0; i < 5; i++) {
+  			if (state.highscoreItems[i].score < newScore)
+  				return i;
+  		}
+  		return -1;
   	}
   },
 
+  mutations: {
+  	// Changes room
+  	setRoom(state, roomName) {
+  		state.roomName = roomName;
+  	},
+
+  	// -- DO NOT USE, USE ACTION EQUIVALENTS INSTEAD --
+  	// Adds a new score, payload needs name, score and position
+  	setHighscore(state, payload) {
+  		// Get payload items
+  		const {name: name, score: score, position: position} = payload;
+
+  		// Add to high-score
+  		state.highscoreItems.splice(position, 1, {
+  			name: name,
+  			score: score
+  		});
+  	},
+  },
+
   actions: {
+  	// Adds a new score to high-score, payload needs name and score
+  	setHighscore(context, payload) {
+  		console.log("In the action");
+  		// Gets high-score position
+  		let position = context.getters.isHighScore(payload.score);
+
+  		// If it's -1, don't bother
+  		if (position !== -1) {
+  			// Run mutation
+  			console.log("Running mutation");
+  			context.commit('setHighscore', {
+  				position: position,
+  				...payload
+  			});
+  		}
+  		else {
+  			console.log("No mutation");
+  		}
+  	}
   },
 
   modules: {

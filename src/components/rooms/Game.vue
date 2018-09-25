@@ -26,6 +26,68 @@
     <!-- Update timer -->
     <Timer ref="pipeTimer" :duration=90 @tick="newPipe"></Timer>
 
+    <!-- Highscore dialog -->
+    <v-dialog
+      v-model="highscoreDialog"
+      width="500"
+      persistent
+    >
+      <v-btn
+        slot="activator"
+        color="red lighten-2"
+        dark
+      >
+        Click Me
+      </v-btn>
+
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          A new high-score!
+        </v-card-title>
+
+        <v-card-text>
+          <p>Congratulations! You've earned a new high-score of {{ score }}!</p>
+          <p>You are number {{ this.$store.getters.isHighScore(score) + 1 }} in the high-score table!</p>
+          <p>Please type in your name and click 'Submit'!</p>
+
+          <v-form ref="form" v-model="highscoreNameValid" lazy-validation>
+	          <v-text-field
+				      v-model="highscoreName"
+				      :rules="[v => (v && v.length <= 10) || 'Name must be less than 10 characters']"
+				      :counter="10"
+				      label="Name"
+				      maxlength="10"
+				      required
+				    ></v-text-field>
+          </v-form>
+
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red"
+            flat
+            @click="highscoreDialog = false"
+          >
+          	Do not save my score
+          </v-btn>
+          <v-btn
+            color="blue"
+            flat
+            @click="saveHighscore()"
+          >
+          	Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- Controls -->
     <div>
 			<v-btn color="blue" @click="flap">Flap</v-btn>
@@ -35,6 +97,7 @@
 			<v-btn color="red" @click="quit">Quit</v-btn>
 		</div>
 
+		<!-- Debug -->
 		<div>
 			<v-btn color="purple" @click="debugResetPos">DEBUG: Reset Knuckles' position</v-btn>
 			<v-btn color="purple" @click="debugTEST">DEBUG: TEST</v-btn>
@@ -68,7 +131,11 @@
 	    		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 	    	],
 	    	gameOver: false, // True if the game is over, false if not
-	    	score: 0 // The score
+	    	score: 0, // The score
+
+	    	highscoreDialog: false, // Toggles highscore dialog
+	    	highscoreNameValid: true, // Stores validity of name in high-score dialog
+	    	highscoreName: "" // The name typed in the high-score dialog
     	}
     },
 
@@ -161,6 +228,10 @@
     	die: function() {
     		this.pause();
     		this.gameOver = true;
+
+    		// If we got the high-score
+    		if (this.$store.getters.isHighScore(this.score) !== -1)
+    			this.highscoreDialog = true;
     	},
 
     	// Restarts the game
@@ -191,6 +262,12 @@
     	quit: function() {
     		this.pause();
         this.$store.commit('setRoom', 'MainMenu');
+    	},
+
+    	// Saves a new high-score
+    	saveHighscore: function() {
+    		this.$store.dispatch('setHighscore', {name: this.highscoreName, score: this.score});
+    		this.highscoreDialog = false;
     	},
 
     	// ----------------------------------------
