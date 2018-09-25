@@ -5,7 +5,7 @@
   	<Audio ref="sound-start" :sound="require('../../assets/k-start.wav')"></Audio>
   	<Audio ref="sound-lose" :sound="require('../../assets/k-lose.wav')"></Audio>
   	<Audio ref="sound-ring" :sound="require('../../assets/ring.wav')"></Audio>
-  	<Audio ref="sound-bgm" :sound="require('../../assets/angelisland.ogg')"></Audio>
+  	<Audio ref="sound-bgm" :loop=true :sound="require('../../assets/angelisland.ogg')"></Audio>
 
   	<!-- Grass -->
     <ScrollingObject image-url="grass.png" :speed="grassSpeed" height="39px" size="contain"></ScrollingObject>
@@ -147,6 +147,7 @@
 		    					// If Knuckles is going through the space
 		    					if (knucklesPos + 24 <= spacePosTop && knucklesPos >= spacePosBottom) {
 		    						this.$refs["sound-ring"].play();
+		    						pipeRef.ringVisible = false;
 		    						this.score++;
 		    					}
 		    					else {

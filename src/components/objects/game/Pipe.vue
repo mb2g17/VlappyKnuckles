@@ -5,6 +5,8 @@
 			<img class="body" src="../../../assets/pipeBody.png" /><img class="head" src="../../../assets/pipeHead.png" />
 		</div>
 
+		<Ring left=5 top=365 :visible=ringVisible></Ring>
+
 		<div class="bottom" :style="{ top: 'calc(-50vh + ' + (spaceHeight / 2) + 'px)' }">
 			<img class="body" src="../../../assets/pipeBody.png" /><img class="head" src="../../../assets/pipeHead.png" />
 		</div>
@@ -13,8 +15,13 @@
 </template>
 
 <script>
+	import Ring from './Ring';
+
 	export default {
 		name: 'Pipe',
+		components: {
+			Ring
+		},
 
 		props: {
 			spaceHeight: { // The height of the space in pixels
@@ -39,7 +46,8 @@
 			return {
 				pos: -38, // x position of pipe
 				spacePosData: 0, // True version of spacePos in data, so Vue doesn't whine at me
-				passed: false // Has this pipe been passed? False if no, true if yes
+				passed: false, // Has this pipe been passed? False if no, true if yes
+				ringVisible: true, // Shows the ring when true
 			}
 		},
 

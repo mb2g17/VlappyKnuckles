@@ -5,7 +5,7 @@
 <script>
 	export default {
 		name: 'Audio',
-		props: ['sound'],
+		props: ['sound', 'loop'],
 
 		data: function() {
 			return {
@@ -15,6 +15,9 @@
 
 		created: function() {
 			this.audio = new Audio(this.sound);
+			
+			if (this.loop !== undefined)
+				this.audio.loop = this.loop;
 		},
 
 		methods: {
