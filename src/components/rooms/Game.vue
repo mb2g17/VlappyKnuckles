@@ -84,6 +84,10 @@
     methods: {
     	// Kickstarts the update interval
     	update: function() {
+
+    		// Starts grass
+    		this.grassSpeed = 10;
+
     		// If update interval isn't already set
     		if (this.updateHandle === -1)
     		{
@@ -204,6 +208,9 @@
     	pause: function() {
     		clearInterval(this.updateHandle);
     		this.updateHandle = -1;
+
+    		// Stops grass
+    		this.grassSpeed = 0;
     	},
 
     	// Quits and goes back to main menu
