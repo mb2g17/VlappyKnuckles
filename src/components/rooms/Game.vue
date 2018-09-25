@@ -78,9 +78,51 @@
 		    		// For each pipe, update it
 		    		for (let i = 0; i < this.pipes.length; i++)
 		    		{
-		    			// If this pipe exists, then update it
+		    			// If this pipe exists...
 		    			if (this.pipes[i] !== -1)
-		    				this.$refs['pipe' + i][0].update();
+		    			{
+		    				// Get the reference of this pipe
+		    				let pipeRef = this.$refs['pipe' + i][0];
+
+		    				// Update it
+		    				pipeRef.update();
+
+		    				// Get pipe position
+		    				let pipePos = pipeRef.getPos;
+
+		    				// If Knuckles is within range of this pipe
+		    				if (pipePos <= 97 && !pipeRef.passed)
+		    				{
+		    					// Set this pipe as 'passed'
+		    					pipeRef.pass();
+
+		    					// Get knuckles' pos, space height and space pos
+		    					let knucklesPos = this.$refs.knuckles.vpos;
+		    					let spaceHeight = pipeRef.spaceHeight;
+		    					let spacePos = -pipeRef.spacePosData; // Flipped because raw spacePos thinks - is up and + is down
+
+		    					// Calculate space pos top and bottom
+		    					let spacePosTop = window.innerHeight / 2 + spaceHeight / 2 + spacePos;
+		    					let spacePosBottom = window.innerHeight / 2 - spaceHeight / 2 + spacePos;
+
+		    					console.log(`knucklesPos: ${knucklesPos}`);
+		    					console.log(`spaceHeight: ${spaceHeight}`);
+		    					console.log(`spacePos: ${spacePos}`);
+
+		    					console.log(`spacePosTop: ${spacePosTop}`);
+		    					console.log(`spacePosBottom: ${spacePosBottom}`);
+		    					
+		    					// If Knuckles is going through the space
+		    					if (knucklesPos + 24 <= spacePosTop && knucklesPos >= spacePosBottom)
+		    					{
+		    						console.log("Passed!");
+		    					}
+		    					else
+		    					{
+		    						console.log("BONK");
+		    					}
+		    				}
+		    			}
 		    		}
 		    		
 		    	}, 17);

@@ -37,8 +37,16 @@
 
 		data: function() {
 			return {
-				pos: -38,
-				spacePosData: 0 // True version of spacePos in data, so Vue doesn't whine at me
+				pos: -38, // x position of pipe
+				spacePosData: 0, // True version of spacePos in data, so Vue doesn't whine at me
+				passed: false // Has this pipe been passed? False if no, true if yes
+			}
+		},
+
+		computed: {
+			// Gets position of this pipe, from the left to the right
+			getPos: function() {
+				return window.innerWidth - this.pos - 38;
 			}
 		},
 
@@ -60,11 +68,17 @@
 			// Puts the pipe back
 			putBack: function() {
 				this.pos = -38;
+				this.passed = false;
 			},
 
 			// Mutator for spacePos data
 			setSpacePos: function(newSpacePos) {
 				this.spacePosData = newSpacePos;
+			},
+
+			// Sets passed to 'true'
+			pass: function() {
+				this.passed = true;
 			}
 		}
 	}
