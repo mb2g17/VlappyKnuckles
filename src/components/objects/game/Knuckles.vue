@@ -15,6 +15,8 @@
 
 	    	deathArea: 15, // the area at which Knuckles will die in pixels
 	    	dead: false, // Are we dead?
+
+        falling: false, // Are we falling?
     	}
     },
 
@@ -60,7 +62,35 @@
     		this.vpos = window.innerHeight / 2;
     		this.vposStr = this.vpos + "px";
     		this.vspeed = 0;
-    	}
+    	},
+
+      // Makes Knuckles fall
+      fall: function() {
+        // Set falling flag
+        this.falling = true;
+
+        // Set up calculations
+        let s = this.vpos - this.deathArea;
+
+        let t = 30;
+        let i = 0;
+
+        let a = (1 / (0.5 * Math.pow(t,2))) * s;
+        let u = 0;
+
+        let intervalID = setInterval(function(vm) {
+          vm.vpos -= u;
+          vm.vposStr = vm.vpos + "px";
+          u += a;
+          i++;
+
+          // If we've fallen enough
+          if (i >= t) {
+            vm.falling = false;
+            clearInterval(intervalID);
+          }
+        }, 17, this);
+      },
     },
 
     created: function() {

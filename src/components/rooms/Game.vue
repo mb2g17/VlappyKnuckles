@@ -197,6 +197,9 @@
     		// Stops grass
     		this.grassSpeed = 0;
 
+    		// Makes Knuckles fall, if he can
+    		this.$refs["knuckles"].fall();
+
     		// If we got the high-score
     		if (this.$store.getters.isHighScore(this.score) !== -1)
     			this.highscoreDialog = true;
@@ -204,26 +207,33 @@
 
     	// Restarts the game
     	restart: function() {
-    		// Play music
-    		this.$refs["sound-bgm"].play();
+    		// Can't restart if Knuckles is falling
+    		if (!this.$refs["knuckles"].falling)
+    		{
+	    		// Play music
+	    		this.$refs["sound-bgm"].play();
 
-    		this.$refs.knuckles.resetPos(); // Resets knuckles position
-    		this.$refs.knuckles.dead = false; // Revives knuckles
+	    		// Gets rid of high-score dialog
+	    		this.highscoreDialog = false;
 
-				// Removes all pipes
-    		for (let i = 0; i < this.pipes.length; i++) {
-    			this.pipes[i] = -1;
-    			this.$refs['pipe' + i][0].putBack();
+	    		this.$refs.knuckles.resetPos(); // Resets knuckles position
+	    		this.$refs.knuckles.dead = false; // Revives knuckles
+
+					// Removes all pipes
+	    		for (let i = 0; i < this.pipes.length; i++) {
+	    			this.pipes[i] = -1;
+	    			this.$refs['pipe' + i][0].putBack();
+	    		}
+
+	    		// Reset data
+	    		this.gameOver = false;
+	    		this.score = 0;
+
+	    		// Starts grass
+	    		this.grassSpeed = 10;
+
+	    		this.pause(); // Pauses game
     		}
-
-    		// Reset data
-    		this.gameOver = false;
-    		this.score = 0;
-
-    		// Starts grass
-    		this.grassSpeed = 10;
-
-    		this.pause(); // Pauses game
     	},
 
     	// Pauses the game by clearing the update interval
@@ -237,6 +247,9 @@
 
     	// Quits and goes back to main menu
     	quit: function() {
+    		// Stop music
+    		this.$refs["sound-bgm"].stop();
+
     		this.pause();
         this.$store.commit('setRoom', 'MainMenu');
     	},
